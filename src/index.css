@@ -1,13 +1,91 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body{
+  display: inline;
+  background-color: green;
+  color: white
+}
+.board{
+  display: inline-block;
+  margin-left: 200px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+img {
+  height: 150px;
+  width: auto;
+  margin: 5px;
+  
+}
+.hidden {
+  display: none;
+  
+}
+
+.show{
+  display:inline-block
+}
+
+/* 
+#dealers-hand img{ 
+  display:inline-flex
+
+} */
+.hand {
+  display: inline-flex;
+}
+
+.bet-btns {
+  display: inline-flex;
+}
+
+/* #dealer-card2{
+  display:inline-flex;
+} */
+
+button {
+  height: 42px;
+  width: auto;
+  padding: 5px;
+  margin: 10px;
+
+}
+.bet-button{
+  display: block
+}
+
+.chips button{
+  height: 80px;
+  width: 80px;
+  color:white;
+  background-color: black;
+  border-radius: 50%;
+  border-style:  double;
+  border-width: thick;
+  font-size: 24px;
+  
+
+}
+#ten{
+  border-color: red;
+
+}
+.disabled{
+  opacity: 50%;
+}
+#twenty{
+  border-color: darkgreen;
+
+}
+#forty{
+  border-color: blue;
+
+}
+#hundred{
+  border-color: yellow;
+
+}
+#all-in{
+  border-color: grey;
+ 
+}
+#dealers-hand {
+  display: inline-flex
 }
