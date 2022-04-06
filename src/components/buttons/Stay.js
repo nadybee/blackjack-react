@@ -1,23 +1,29 @@
-import BlackjackContext from '../../context/BlackjackContext'
-import {useContext} from 'react'
+import BlackjackContext from "../../context/BlackjackContext";
+import { useContext } from "react";
 
 
 
 const Stay = () => {
-  const {staying} = useContext(BlackjackContext)
-
+  const { staying, setHandOver, divy } = useContext(BlackjackContext);
 
   return (
     <div>
-    
-      <button onClick ={ ()=>{
-                          staying()
-                
-                          
-                            }
-} >stay</button>
-    </div>
-  )
-}
+      <button
+        onClick={() => {
+          staying();
+          setHandOver(true);
+          divy()
+          
+        }}
+      >
+        stay
 
-export default Stay
+      </button>
+
+    </div>
+
+  );
+
+};
+
+export default Stay;

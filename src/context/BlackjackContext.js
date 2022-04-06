@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from "react";
 const BlackjackContext = createContext();
 
 export const BlackjackProvider = ({ children }) => {
@@ -6,27 +6,29 @@ export const BlackjackProvider = ({ children }) => {
   const [deck, setDeck] = useState([]);
   const [dealerHand, setDealerHand] = useState([]);
   const [playerHand, setPlayerHand] = useState([]);
-  const [hit, setHit] = useState(false);
   const [stay, setStay] = useState(false);
   const [dealer21, setDealer21] = useState(false);
   const [player21, setPlayer21] = useState(false);
-  // const [chips, setChips] = useState(100)
+  const [chips, setChips] = useState(100);
+  const [bet, setBet] = useState(0);
+  const [handOver, setHandOver] = useState(false);
   // const  [doubleDown]= useState(false)
 
   useEffect(() => {
+    if (deck.length<8) {
     fetchDeck();
-  }, []);
-
-  // console.log(deck);
+    }
+  });
 
   //get deck of cards from deckofcardsapi.com
-  const fetchDeck = async () => {
+  async function fetchDeck() {
     const response = await fetch(
       `https://deckofcardsapi.com/api/deck/new/draw/?count=52`
     );
     const data = await response.json();
     setDeck(data.cards);
-  };
+    console.log('new deck')
+  }
   //draw card to dealer
   const drawDealerCard = (deck) => {
     setDealerHand((arr) => [...arr, deck.pop()]);
@@ -39,11 +41,14 @@ export const BlackjackProvider = ({ children }) => {
   // deal third deal to dealer
 
   const dealToDealer = (dealerHand, deck) => {
-   if (calculateHandTotal(dealerHand) <= 16) {
+    if (calculateHandTotal(dealerHand) <= 16) {
       drawDealerCard(deck);
     }
   };
-
+  // set start game
+  // const startRound = () => {
+  //   setRound(true);
+  // };
   //starting game
   const firstDeal = () => {
     drawDealerCard(deck);
@@ -55,14 +60,58 @@ export const BlackjackProvider = ({ children }) => {
     drawPlayerCard(deck);
   };
 
-  
+  //set state if player has blackjack
+  const checkForPlayer21 = () => {
+    let aceArr = []
+    for (let i = 0; i < playerHand.length; i++) {
+      if (
+        playerHand[i].code === "AD" ||
+        playerHand[i].code === "AS" ||
+        playerHand[i].code === "AH" ||
+        playerHand[i].code === "AC"
+      ) {
+        aceArr.push(playerHand[i]);
+      }
+    }
 
-  const checkForPlayer21 = (hand) => {
-    if (calculateHandTotal(hand) === 21) {
-      setPlayer21(true)
-    
+    if (calculateHandTotal(playerHand) === 21 && aceArr.length>0 && playerHand.length===2) {
+      setPlayer21(true);
+      setHandOver(true)
+      setChips((prev) => prev + 30);
+
     }
   };
+
+  //set state if dealer has blackjack
+  const checkForDealer21 = () => {
+    let aceArr = []
+    for (let i = 0; i < dealerHand.length; i++) {
+      if (
+        dealerHand[i].code === "AD" ||
+        dealerHand[i].code === "AS" ||
+        dealerHand[i].code === "AH" ||
+        dealerHand[i].code === "AC"
+      ) {
+        aceArr.push(dealerHand[i]);
+      }
+    }
+    if ( !player21 && calculateHandTotal(dealerHand) === 21 && aceArr.length>0 && dealerHand.length===2) {
+      setDealer21(true);
+      setHandOver(true)
+      dealerWon()
+    }
+
+  };
+
+  //checks if player busts
+
+  const checkForBust =()=>{
+    if(calculateHandTotal(playerHand)>21){
+     setStay(true)
+
+
+    }
+  }
 
   //calcuates a hand
   const calculateHandTotal = (hand) => {
@@ -71,19 +120,24 @@ export const BlackjackProvider = ({ children }) => {
     let total = 0;
 
     for (let i = 0; i < hand.length; i++) {
-      if (hand[i].value === 'ACE') {
+      if (
+        hand[i].code === "AD" ||
+        hand[i].code === "AS" ||
+        hand[i].code === "AH" ||
+        hand[i].code === "AC"
+      ) {
         aceArr.push(hand[i]);
       }
     }
 
     for (let j = 0; j < hand.length; j++) {
       if (
-        hand[j].value === 'KING' ||
-        hand[j].value === 'QUEEN' ||
-        hand[j].value === 'JACK'
+        hand[j].value === "KING" ||
+        hand[j].value === "QUEEN" ||
+        hand[j].value === "JACK"
       ) {
         hand[j].value = 10;
-      } else if (hand[j].value === 'ACE') {
+      } else if (hand[j].value === "ACE") {
         hand[j].value = 1;
       }
       subtotal += Number(hand[j].value);
@@ -91,12 +145,12 @@ export const BlackjackProvider = ({ children }) => {
 
     for (let k = 0; k < hand.length; k++) {
       if (
-        hand[k].value === 'KING' ||
-        hand[k].value === 'QUEEN' ||
-        hand[k].value === 'JACK'
+        hand[k].value === "KING" ||
+        hand[k].value === "QUEEN" ||
+        hand[k].value === "JACK"
       ) {
         hand[k].value = 10;
-      } else if (hand[k].value === 'ACE') {
+      } else if (hand[k].value === "ACE") {
         hand.value = 1;
       }
       total += Number(hand[k].value);
@@ -106,17 +160,82 @@ export const BlackjackProvider = ({ children }) => {
     }
     return total;
   };
-  //player takes a hit
-  const hitting = () => {
-    setHit(true);
-  };
 
   // player stays
 
   const staying = () => {
     setStay(true);
+    // setRound(false);
+  };
+
+  // handling hitting
+
+  const hitting =() => { 
+    if (!player21 && calculateHandTotal(playerHand)<21) {
+          drawPlayerCard(deck) 
+  
+        
+      }
+      else{
+        setHandOver(true)
+      }
+    }
+
+  
+
+  const playerWon = () => {
+    setChips((prev) => prev + 20);
    
   };
+  const dealerWon = () => {
+
+  };
+  const push = () => {
+    setChips((prev) => prev+10);
+ 
+  };
+  const resetBet = () => {
+    setBet(0);
+  };
+
+  //place bet
+  const betting = () => {
+    setBet(10);
+    setChips((prev) => prev - 10);
+  };
+
+  const resetPlayerHand = () => {
+    setPlayerHand([]);
+  };
+  const resetDealerHand = () => {
+    setDealerHand([]);
+  };
+
+  //divy the bet
+
+  const divy =() => {
+     const dealerTotal = calculateHandTotal(dealerHand);
+    const playerTotal = calculateHandTotal(playerHand);
+
+    if (dealerTotal > 21) {
+      return playerWon()
+      
+
+    } else if (playerTotal > 21) {
+  return dealerWon()
+  
+
+    } else if (dealerTotal > playerTotal) {
+      return dealerWon()
+  
+    } else if (dealerTotal === playerTotal) {
+      return push()
+
+    } else {
+    return playerWon()
+    
+    }
+  }
 
   return (
     <BlackjackContext.Provider
@@ -126,10 +245,19 @@ export const BlackjackProvider = ({ children }) => {
         playerHand,
         player21,
         dealer21,
-        hit,
         stay,
+        chips,
+        bet,
+        handOver,
+        setBet,
+        setStay,
+        setChips,
+        setDealer21,
+        setPlayer21,
         checkForPlayer21,
-        // checkForDealer21,
+        checkForDealer21,
+        checkForBust,
+        setHandOver,
         dealToDealer,
         drawDealerCard,
         drawPlayerCard,
@@ -138,6 +266,15 @@ export const BlackjackProvider = ({ children }) => {
         calculateHandTotal,
         hitting,
         staying,
+        betting,
+        divy,
+        // setRound,
+        playerWon,
+        dealerWon,
+        push,
+        resetBet,
+        resetDealerHand,
+        resetPlayerHand,
       }}
     >
       {children}

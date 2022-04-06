@@ -31,7 +31,17 @@ img {
 .hand {
   display: inline-flex;
 }
-
+.header{
+  background-color: white;
+  color: black;
+  padding: 10px
+}
+.inline{
+  display:inline-flex
+}
+.info{
+  margin-left: 20px
+}
 .bet-btns {
   display: inline-flex;
 }

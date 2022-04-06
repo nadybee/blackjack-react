@@ -3,7 +3,7 @@ import React from 'react';
 const Header = ({ startGame, deck }) => {
   return (
     <header>
-      <h1>BlackJack Baby!</h1>
+      <h1 className= 'header'>Natalie's Blackjack Game</h1>
      
     </header>
   )
