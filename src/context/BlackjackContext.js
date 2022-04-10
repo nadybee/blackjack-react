@@ -12,6 +12,9 @@ export const BlackjackProvider = ({ children }) => {
   const [chips, setChips] = useState(100);
   const [bet, setBet] = useState(0);
   const [handOver, setHandOver] = useState(false);
+  const [dealerWin, setDealerWin] = useState(false)
+  const [playerWin, setPlayerWin] =useState(false)
+  const[push,setPush] = useState(false)
   // const  [doubleDown]= useState(false)
 
   useEffect(() => {
@@ -98,7 +101,7 @@ export const BlackjackProvider = ({ children }) => {
     if ( !player21 && calculateHandTotal(dealerHand) === 21 && aceArr.length>0 && dealerHand.length===2) {
       setDealer21(true);
       setHandOver(true)
-      dealerWon()
+    
     }
 
   };
@@ -183,17 +186,7 @@ export const BlackjackProvider = ({ children }) => {
 
   
 
-  const playerWon = () => {
-    setChips((prev) => prev + 20);
-   
-  };
-  const dealerWon = () => {
-
-  };
-  const push = () => {
-    setChips((prev) => prev+10);
  
-  };
   const resetBet = () => {
     setBet(0);
   };
@@ -211,31 +204,25 @@ export const BlackjackProvider = ({ children }) => {
     setDealerHand([]);
   };
 
-  //divy the bet
-
-  const divy =() => {
-     const dealerTotal = calculateHandTotal(dealerHand);
-    const playerTotal = calculateHandTotal(playerHand);
-
-    if (dealerTotal > 21) {
-      return playerWon()
-      
-
-    } else if (playerTotal > 21) {
-  return dealerWon()
-  
-
-    } else if (dealerTotal > playerTotal) {
-      return dealerWon()
-  
-    } else if (dealerTotal === playerTotal) {
-      return push()
-
-    } else {
-    return playerWon()
-    
-    }
+  const payUp =()=>{
+    if (playerWin)
+{
+      setChips((prev) => prev + 20);
+ 
+}
+else if (dealerWin) {
+ 
+      setChips((prev) => prev )
+}
+else if (push)
+{
+      setChips((prev) => prev+10);
+}  
   }
+
+
+
+
 
   return (
     <BlackjackContext.Provider
@@ -249,6 +236,12 @@ export const BlackjackProvider = ({ children }) => {
         chips,
         bet,
         handOver,
+        dealerWin,
+        playerWin,
+        push,
+        setPlayerWin,
+        setDealerWin,
+        setPush,
         setBet,
         setStay,
         setChips,
@@ -267,11 +260,12 @@ export const BlackjackProvider = ({ children }) => {
         hitting,
         staying,
         betting,
-        divy,
+        payUp,
+        // divy,
         // setRound,
-        playerWon,
-        dealerWon,
-        push,
+        // playerWon,
+        // dealerWon,
+        // pushed,
         resetBet,
         resetDealerHand,
         resetPlayerHand,

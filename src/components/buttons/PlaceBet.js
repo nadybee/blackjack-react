@@ -2,7 +2,7 @@ import BlackjackContext from '../../context/BlackjackContext';
 import { useContext, useEffect } from 'react';
 
 const PlaceBet = () => {
-  const { firstDeal, secondDeal, checkForPlayer21, playerHand, setHandOver,checkForDealer21, dealerHand, betting, resetDealerHand,resetPlayerHand,setStay,setPlayer21, setDealer21,checkForBust} = useContext(BlackjackContext);
+  const { firstDeal, secondDeal, checkForPlayer21, playerHand, setHandOver,checkForDealer21, dealerHand, betting, resetDealerHand,resetPlayerHand,setStay,setPlayer21, setDealer21,checkForBust, setPlayerWin, setDealerWin,setPush} = useContext(BlackjackContext);
   useEffect(()=> {
     checkForPlayer21(playerHand)
     checkForDealer21(dealerHand)
@@ -25,6 +25,9 @@ const PlaceBet = () => {
           setHandOver(false)
           setDealer21(false)
           setPlayer21(false)
+          setPlayerWin(false)
+          setDealerWin(false)
+          setPush(false)
      
          
 

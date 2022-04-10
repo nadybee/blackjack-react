@@ -21,6 +21,7 @@ const Game = () => {
     checkForDealer21,
     checkForPlayer21,
     bet,
+    payUp,
     checkForBust,
     handOver
   } = useContext(BlackjackContext);
@@ -32,6 +33,7 @@ const Game = () => {
       dealToDealer(dealerHand, deck);
     }
     checkForBust()
+  
 
   }, [checkForBust, checkForDealer21, checkForPlayer21, dealToDealer, dealerHand, deck, playerHand, stay]);
 
@@ -44,6 +46,7 @@ console.log(deck.length)
       { bet===0 && handOver===false ?
       <Starting /> :
       <Playing /> }
+ 
   
 
  

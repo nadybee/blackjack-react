@@ -3,34 +3,25 @@ import { useContext } from 'react';
 import BlackjackContext from '../context/BlackjackContext';
  
 const CalculateEnd = () => {
-    const {playerHand, dealerHand, calculateHandTotal, stay,player21,dealer21, playerWon, dealerWon, push,resetBet,resetDealerHand,resetPlayerHand,setHandOver} =
+    const {playerWin,dealerWin,push,bet,setBet,setChips} =
     useContext(BlackjackContext);
   
-    const dealerTotal = calculateHandTotal(dealerHand);
-  const playerTotal = calculateHandTotal(playerHand);
+if (playerWin)
+{
+      setChips((prev) => prev + 20);
+ 
+}
+else if (dealerWin) {
+ 
+      setChips((prev) => prev )
+}
+else if (push)
+{
+      setChips((prev) => prev+10);
+}  
     
-     resetDealerHand()
-     resetPlayerHand()
-     resetBet()
+    
 
-          if (dealerTotal > 21) {
-            return playerWon()
-
-     
-          } else if (playerTotal > 21) {
-        return dealerWon()
-     
-          } else if (dealerTotal > playerTotal) {
-            return dealerWon()
-        
-          } else if (dealerTotal === playerTotal) {
-            return push()
-
-          } else {
-          return playerWon()
-          
-          }
-          
         }
 //      
 

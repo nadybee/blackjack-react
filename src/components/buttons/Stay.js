@@ -12,7 +12,7 @@ const Stay = () => {
         onClick={() => {
           staying();
           setHandOver(true);
-          divy()
+          // divy()
           
         }}
       >

@@ -28,11 +28,9 @@ const Dealer = () => {
           <img src={card.image} alt={card.code} key={card.code} />
         
         ))}
-      <EndHand />
-
-
-    
+        <EndHand />
       </div>
+      
     );
 };
 
